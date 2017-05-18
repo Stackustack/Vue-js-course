@@ -33,8 +33,12 @@
                                 aria-haspopup="true" 
                                 aria-expanded="false">Save / Load<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Save Data</a></li>
-                        <li><a href="#">Load Data</a></li>
+                        <li><a 
+                            href="#"
+                            @click="saveData">Save Data</a></li>
+                        <li><a 
+                            href="#"
+                            @click="loadData">Load Data</a></li>
                     </ul>
                     </li>
                 </ul>
@@ -46,6 +50,7 @@
 
 <script>
     import { mapActions } from 'vuex'
+    import { mapGetters } from 'vuex'
 
     export default {
         data() {
@@ -55,13 +60,36 @@
         },
         methods: {
             ...mapActions([
-                'randomizeStocksPrices'
+                'randomizeStocksPrices',
+                'loadDataAction'
             ]),
             toggleDropdown() {
-                this.dropdownIsOpen = !this.dropdownIsOpen
+                this.isDropdownOpen = !this.isDropdownOpen
+            },
+            saveData() {
+                const data = {
+                    funds: this.funds,
+                    stockPortfolio: this.stockPortfolio,
+                    stocks: this.stocks
+                }
+                this.$http.put('data.json', data)
+            },
+            loadData() {
+                this.$http.get('data.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            this.loadDataAction()
+                        }
+                    })
             }
         },
         computed: {
+            ...mapGetters([
+                'funds',
+                'stockPortfolio',
+                'stocks'
+            ]),
             funds() {
                 return this.$store.getters.funds
             }

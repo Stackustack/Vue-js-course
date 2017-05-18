@@ -25,7 +25,10 @@ const mutations = {
             state.funds += record.quantity * stockPrice
             state.stocks.splice(state.stocks.indexOf(record), 1)
         }
-
+    },
+    'SET_PROFILE'(state, {stockPortfolio, funds}) {
+        state.stocks = stockPortfolio ? stockPortfolio : []
+        state.funds = funds
     }
 }
 
@@ -35,6 +38,9 @@ const actions = {
     },
     sellStock: ({commit}, order) => {
         commit('SELL_STOCK', order)
+    },
+    setFunds: ({commit}, value) => {
+        commit('SET_FUNDS', value)
     }
 }
 
